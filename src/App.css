@@ -27,7 +27,7 @@
 .eth {
   text-align: center;
   color: gray;
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .btnContainer {
@@ -40,6 +40,22 @@
   cursor: pointer;
   margin: 16px;
   padding: 8px;
-  border: 0;
+  border: 1px solid #a9a9a9;
   border-radius: 5px;
+}
+
+textarea {
+  border-radius: 5px;
+  margin-top: 16px;
+}
+
+.msgContainer {
+  box-shadow: 1px 1px 7px 1px #a9a9a9;
+  margin: .7rem;
+  border-radius: 5px;
+  padding: .2rem;
+}
+
+.msgContainer > div {
+  padding: .2rem;
 }

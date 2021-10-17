@@ -5,13 +5,44 @@ import abi from './utils/CryptoRater.json'
 
 export default function App() {
   const [currentAccount, setCurrentAccount] = useState("")
+  const [allRatings, setRates] = useState([])
+  const [text, setText] = useState("")
   const [plusCount, setPlus] = useState("")
   const [minusCount, setMinus] = useState("")
   const [mining, setMining] = useState("")
 
-  const contractAddress = "0xF6E6471D94d7B51B769f7804e3F1732b6020cf69"
+  const contractAddress = "0x16F8BF8EeE59d5945603cC394B8fed1F31F9B2F1"
 
   const contractABI = abi.abi
+
+  const getAllRatings = async () => {
+    try {
+      const { ethereum } = window
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum)
+        const signer = provider.getSigner()
+        const cryptoRateContract = new ethers.Contract(contractAddress, contractABI, signer)
+
+        const rates = await cryptoRateContract.getAllRatings()
+
+        let ratesCleaned = []
+        rates.forEach(rate => {
+          ratesCleaned.push({
+            address: rate.rater,
+            timestamp: new Date(rate.timestamp * 1000),
+            message: rate.message
+          })
+        })
+
+        setRates(ratesCleaned)
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -35,9 +66,11 @@ export default function App() {
         console.log("Found an authorized acccount:", account);
         setCurrentAccount(account)
 
+        getAllRatings()
+
         let plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
-  
+
         let minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs down count...", minusCount.toNumber());
   
@@ -81,7 +114,7 @@ const connectWallet = async () => {
         let plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
 
-        const plusTxn = await cryptoRateContract.plus()
+        const plusTxn = await cryptoRateContract.plus(text)
         console.log("Mining...", plusTxn.hash);
         setMining(true)
 
@@ -113,7 +146,7 @@ const connectWallet = async () => {
         let minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs down count...", minusCount.toNumber());
 
-        const minusTxn = await cryptoRateContract.minus()
+        const minusTxn = await cryptoRateContract.minus(text)
         console.log("Mining...", minusTxn.hash);
         setMining(true)
 
@@ -133,6 +166,13 @@ const connectWallet = async () => {
     }
   }
 
+  const handleChange = (e) => {
+    setText(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+  }
 
   useEffect(() => {
     checkIfWalletIsConnected()
@@ -147,10 +187,7 @@ const connectWallet = async () => {
         </div>
 
         <div className="bio">
-          My name's Kevin and I'll be collecting your votes on how you feel about crypto. We'll start with just ETH and I'll continually add more options for you to vote on. Connect your wallet and place some votes!
-        <div className="eth">
-          How do you feel about ETH?
-        </div>
+          My name's Kevin and I'll be collecting your votes on how you feel about Ethereum. Connect your wallet and place some votes!
         {mining &&
           (
             <div className="eth">
@@ -166,12 +203,19 @@ const connectWallet = async () => {
           )
         }
         </div>
+        <textarea 
+          style={{height: "3rem"}} 
+          placeholder="Tell me something you like/dislike about Ethereum? Click the 👍 or 👎 to submit your response!"
+          value={text}
+          onChange={handleChange}
+          >
+        </textarea>
         <div className="btnContainer">
-          <button className="button" onClick={plus}>
+          <button className="button" onClick={plus} onSubmit={handleSubmit}>
             👍
           </button>
 
-          <button className="button" onClick={minus}>
+          <button className="button" onClick={minus} onSubmit={handleSubmit}>
             👎
           </button>
         </div>
@@ -180,6 +224,17 @@ const connectWallet = async () => {
             Connect Wallet to Vote
           </button>
         )}
+      <div className="container">
+        {allRatings.map((rate, i) => {
+          return (
+            <div key={i} className="msgContainer">
+              <div>Address: {rate.address}</div>
+              <div>Time: {rate.timestamp.toString()}</div>
+              <div>Message: {rate.message}</div>
+            </div>
+          )
+        })}
+      </div>
       </div>
     </div>
   );
