@@ -36,10 +36,10 @@ export default function App() {
 
         let plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
-
+  
         let minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs down count...", minusCount.toNumber());
-
+  
         setPlus(plusCount.toNumber())
         setMinus(minusCount.toNumber())
       } else {
@@ -146,9 +146,13 @@ const connectWallet = async () => {
         <div className="eth">
           How do you feel about ETH?
         </div>
+        {currentAccount &&
+        (
         <div className="eth">
           Total thumbs up: {plusCount} Total thumbs down: {minusCount}
         </div>
+        )
+        }
         </div>
         <div className="btnContainer">
           <button className="button" onClick={plus}>
@@ -161,7 +165,7 @@ const connectWallet = async () => {
         </div>
         {!currentAccount && (
           <button className="button" onClick={connectWallet}>
-            Connect Wallet
+            Connect Wallet to Vote
           </button>
         )}
       </div>
