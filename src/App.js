@@ -16,6 +16,10 @@ export default function App() {
     try {
       const { ethereum } = window
 
+      const provider = new ethers.providers.Web3Provider(ethereum)
+      const signer = provider.getSigner()
+      const cryptoRateContract = new ethers.Contract(contractAddress, contractABI, signer)
+
       if (!ethereum) {
         console.log("Make sure you have metamask!");
         return
@@ -29,32 +33,20 @@ export default function App() {
         const account = accounts[0]
         console.log("Found an authorized acccount:", account);
         setCurrentAccount(account)
+
+        let plusCount = await cryptoRateContract.getPlus()
+        console.log("Received thumbs up count...", plusCount.toNumber());
+
+        let minusCount = await cryptoRateContract.getMinus()
+        console.log("Received thumbs down count...", minusCount.toNumber());
+
+        setPlus(plusCount.toNumber())
+        setMinus(minusCount.toNumber())
       } else {
         console.log("No authorized account found");
       }
     } catch (error) {
       console.log(error);
-  }
-}
-
-const getCounts = async () => {
-  try {
-    const { ethereum } = window
-
-    const provider = new ethers.providers.Web3Provider(ethereum)
-    const signer = provider.getSigner()
-    const cryptoRateContract = new ethers.Contract(contractAddress, contractABI, signer)
-
-    let plusCount = await cryptoRateContract.getPlus()
-    console.log("Received thumbs up count...", plusCount.toNumber());
-
-    let minusCount = await cryptoRateContract.getMinus()
-    console.log("Received thumbs down count...", minusCount.toNumber());
-
-    setPlus(plusCount.toNumber())
-    setMinus(minusCount.toNumber())
-  } catch (error) {
-    console.log(error);
   }
 }
 
@@ -139,7 +131,6 @@ const connectWallet = async () => {
 
   useEffect(() => {
     checkIfWalletIsConnected()
-    getCounts()
   }, [])
   
   return (
