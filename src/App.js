@@ -115,9 +115,11 @@ const connectWallet = async () => {
 
         const minusTxn = await cryptoRateContract.minus()
         console.log("Mining...", minusTxn.hash);
+        setMining(true)
 
         await minusTxn.wait()
         console.log("Mined -- ", minusTxn.hash);
+        setMining(false)
 
         minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs up count...", minusCount.toNumber());
