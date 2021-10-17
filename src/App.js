@@ -7,6 +7,7 @@ export default function App() {
   const [currentAccount, setCurrentAccount] = useState("")
   const [plusCount, setPlus] = useState("")
   const [minusCount, setMinus] = useState("")
+  const [mining, setMining] = useState("")
 
   const contractAddress = "0xF6E6471D94d7B51B769f7804e3F1732b6020cf69"
 
@@ -82,9 +83,11 @@ const connectWallet = async () => {
 
         const plusTxn = await cryptoRateContract.plus()
         console.log("Mining...", plusTxn.hash);
+        setMining(true)
 
         await plusTxn.wait()
         console.log("Mined -- ", plusTxn.hash);
+        setMining(false)
 
         plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
@@ -146,12 +149,19 @@ const connectWallet = async () => {
         <div className="eth">
           How do you feel about ETH?
         </div>
+        {mining &&
+          (
+            <div className="eth">
+              Mining...
+            </div>
+          )
+        }
         {currentAccount &&
-        (
-        <div className="eth">
-          Total thumbs up: {plusCount} Total thumbs down: {minusCount}
-        </div>
-        )
+          (
+            <div className="eth">
+              Total thumbs up: {plusCount} Total thumbs down: {minusCount}
+            </div>
+          )
         }
         </div>
         <div className="btnContainer">
