@@ -11,7 +11,7 @@ export default function App() {
   const [minusCount, setMinus] = useState("")
   const [mining, setMining] = useState("")
 
-  const contractAddress = "0xdEA582206ec5F3c1249955b7745128d9AF7aC22D"
+  const contractAddress = "0x507fD6ad30C8890e73DfD56a8b3564EDcf12365c"
 
   const contractABI = abi.abi
 
@@ -191,10 +191,10 @@ const connectWallet = async () => {
         </div>
 
         <div className="bio">
-          My name's Kevin and I'll be collecting your votes on how you feel about Ethereum. Connect your wallet and place some votes!
+          Hi! My name is Kevin and this is my first dApp built with Solidity, React, JavaScript, and Hardhat. I'm collecting your votes on how you feel about Ethereum. Connect your MetaMask wallet and place some votes! You will need some test ether on the Rinkeby testnet to use this dApp. If you're lucky you may even win some test eth!
         {mining &&
           (
-            <div className="eth">
+            <div className="eth" style={{color: "red"}}>
               Mining...
             </div>
           )
