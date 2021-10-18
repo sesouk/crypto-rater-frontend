@@ -36,6 +36,16 @@ export default function App() {
         })
 
         setRates(ratesCleaned)
+
+        cryptoRateContract.on("NewRate", (from, timestamp, message) => {
+          console.log("NewRate", from, timestamp, message);
+
+          setRates(prevState => [...prevState, {
+            address: from,
+            timestamp: new Date(timestamp * 1000),
+            message: message
+          }])
+        })
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -114,14 +124,13 @@ const connectWallet = async () => {
         let plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
 
-        const plusTxn = await cryptoRateContract.plus(text)
+        const plusTxn = await cryptoRateContract.plus(text, { gasLimit: 300000 })
         console.log("Mining...", plusTxn.hash);
         setMining(true)
 
         await plusTxn.wait()
         console.log("Mined -- ", plusTxn.hash);
         setMining(false)
-        getAllRatings()
 
         plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
@@ -148,14 +157,13 @@ const connectWallet = async () => {
         let minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs down count...", minusCount.toNumber());
 
-        const minusTxn = await cryptoRateContract.minus(text)
+        const minusTxn = await cryptoRateContract.minus(text, { gasLimit: 300000 })
         console.log("Mining...", minusTxn.hash);
         setMining(true)
 
         await minusTxn.wait()
         console.log("Mined -- ", minusTxn.hash);
         setMining(false)
-        getAllRatings()
 
         minusCount = await cryptoRateContract.getMinus()
         console.log("Received thumbs down count...", minusCount.toNumber());
