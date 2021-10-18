@@ -11,7 +11,7 @@ export default function App() {
   const [minusCount, setMinus] = useState("")
   const [mining, setMining] = useState("")
 
-  const contractAddress = "0x94FAbfbf6c5C3CAE3D4eFeae634B77f28E31529c"
+  const contractAddress = "0xD683BFb148717dEd7183b7C772ef7B7296eAf23E"
 
   const contractABI = abi.abi
 
