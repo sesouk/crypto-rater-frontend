@@ -11,7 +11,7 @@ export default function App() {
   const [minusCount, setMinus] = useState("")
   const [mining, setMining] = useState("")
 
-  const contractAddress = "0x5E87b342a263C15ddCc7e80320Dc78a642057e41"
+  const contractAddress = "0x94FAbfbf6c5C3CAE3D4eFeae634B77f28E31529c"
 
   const contractABI = abi.abi
 
@@ -37,8 +37,8 @@ export default function App() {
 
         setRates(ratesCleaned)
 
-        cryptoRateContract.on("NewRate", (from, timestamp, message) => {
-          console.log("NewRate", from, timestamp, message);
+        cryptoRateContract.on("NewRating", (from, timestamp, message) => {
+          console.log("NewRating", from, timestamp, message);
 
           setRates(prevState => [...prevState, {
             address: from,
@@ -199,7 +199,7 @@ const connectWallet = async () => {
         </div>
 
         <div className="bio">
-          Hi! My name is Kevin and this is my first dApp built with Solidity, React, JavaScript, and Hardhat. I'm collecting your votes on how you feel about Ethereum. Connect your MetaMask wallet and place some votes! You will need some test ether on the Rinkeby testnet to use this dApp. If you're lucky you may even win some test eth!
+          Hi! My name is Kevin and this is my first dApp built with Solidity, React, JavaScript, and Hardhat. I'm collecting your votes on how you feel about Ethereum. Connect your MetaMask wallet and place some votes! You will need some test ether on the Rinkeby testnet to use this dApp. If you're lucky you may even win some test eth! There is a limit of 1 submission every 10 minutes.
         {mining &&
           (
             <div className="eth" style={{color: "red"}}>
