@@ -121,11 +121,13 @@ const connectWallet = async () => {
         await plusTxn.wait()
         console.log("Mined -- ", plusTxn.hash);
         setMining(false)
+        getAllRatings()
 
         plusCount = await cryptoRateContract.getPlus()
         console.log("Received thumbs up count...", plusCount.toNumber());
 
         setPlus(plusCount.toNumber())
+        setText("")
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -153,11 +155,13 @@ const connectWallet = async () => {
         await minusTxn.wait()
         console.log("Mined -- ", minusTxn.hash);
         setMining(false)
+        getAllRatings()
 
         minusCount = await cryptoRateContract.getMinus()
-        console.log("Received thumbs up count...", minusCount.toNumber());
+        console.log("Received thumbs down count...", minusCount.toNumber());
 
         setMinus(minusCount.toNumber())
+        setText("")
       } else {
         console.log("Ethereum object doesn't exist!");
       }
